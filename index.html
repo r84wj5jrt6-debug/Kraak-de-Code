@@ -113,6 +113,7 @@
     font-size:clamp(38px,13vw,72px);color:#f2c14e;line-height:1.05;text-shadow:0 6px 0 #5c0d18,0 0 40px #f2c14e88;opacity:0;z-index:4}
   #intro .ititle span{color:#fff}
   #intro .ibtn{position:absolute;left:50%;transform:translateX(-50%);z-index:6;font-family:Inter,sans-serif;font-weight:600;border-radius:999px;cursor:pointer}
+  #intro .vol{position:absolute;left:0;right:0;top:calc(55vh + 86px);text-align:center;color:#fff;font-size:18px;font-weight:600;z-index:6;text-shadow:0 2px 8px #000}
   #startBtn{top:55vh;background:#f2c14e;color:#5c0d18;font-size:22px;padding:16px 34px;animation:pulse 1.4s infinite}
   @keyframes pulse{50%{transform:translateX(-50%) scale(1.07)}}
   #intro #skipBtn{bottom:calc(9vh + 14px);right:16px;left:auto;transform:none;background:#ffffff22;color:#fff;font-size:14px;padding:8px 16px;display:none}
@@ -146,11 +147,11 @@
   <div class="moon">🌙</div>
   <div class="actor" id="aGift">🎁</div>
   <div class="pre" id="iPre">Sinterklaas presenteert</div>
+  <div class="vol" id="iVol">🔊 Zet je volume aan</div>
   <div class="cap" id="iCap"></div>
   <div class="idig" id="iDig"><span>?</span><span>?</span><span>?</span></div>
   <h1 class="ititle" id="iTitle">Kraak de<br><span>Code</span></h1>
   <button class="ibtn" id="startBtn">▶ Start</button>
-  <button class="ibtn" id="skipBtn">Overslaan ⏭</button>
   <button class="ibtn" id="playBtn">Speel!</button>
 </div>
 <div class="flash" id="flash"></div>
@@ -607,7 +608,7 @@ function R(i,vol){
 let scratchBusy=0;
 const said=(i,min,gap)=>sleep(Math.max(min,R(i)+(gap||400)));
 async function playTrailer(){
-  audio();$('intro').classList.add('started');$('startBtn').style.display='none';fade($('iPre'),0,600);$('skipBtn').style.display='block';
+  audio();$('intro').classList.add('started');$('startBtn').style.display='none';fade($('iPre'),0,600);fade($('iVol'),0,600);
   try{
     startScore();await wait(700);
     // 1 - stoomboot
@@ -662,13 +663,12 @@ async function playTrailer(){
     const fl=$('flash');fl.classList.remove('on');void fl.offsetWidth;fl.classList.add('on');
     t.animate([{opacity:0,transform:'scale(3) rotate(-6deg)'},{opacity:1,transform:'scale(1) rotate(0)'}],{duration:650,fill:'forwards',easing:'cubic-bezier(.2,1.4,.4,1)'});
     await wait(2400);confetti();
-    $('skipBtn').style.display='none';$('playBtn').style.display='block';
+    $('playBtn').style.display='block';
     await sleep(2500);bus=null;
   }catch(e){ if(e!=='skip')console.error(e); endIntro(); }
 }
 function endIntro(){if(!introOn)return;introOn=false;stopScore();stopVoices();$('intro').classList.add('out');try{synth&&synth.cancel()}catch(e){}setTimeout(()=>$('intro').style.display='none',1000)}
 $('startBtn').onclick=playTrailer;
-$('skipBtn').onclick=()=>{introSkip=true;endIntro()};
 $('playBtn').onclick=endIntro;
 newGame();
 for(let i=0;i<18;i++){const d=document.createElement('div');d.className='pn';const sz=8+Math.random()*10;
